@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.1 (2026-11-24)
+- Phase 4: behaviour eval suite. Its 6 cases run through `claude plugin eval` with a no-plugin baseline arm. There is also a headless build-to-green runner (`evals/run.ps1`, hidden acceptance tests). Baseline: **0.92 with devsys vs 0.42 without**. See `evals/README.md`.
+- Eval-driven fixes:
+  - The session-start hook now routes build requests to `devsys:build`, because skills didn't auto-trigger. That took tests-first from 0 to 1.0.
+  - The guardian heads-up is now in CLAUDE.md and waits for the user's answer.
+- Phase 5: `/devsys:update dry-run` was verified live. Opus with Haiku and Sonnet helpers cost about $0.88 and produced 6 proposals (4 fix, 2 adopt, 0 prune) in `update/proposals/2026-11-24-dry-run.md`. They wait for your yes/no.
+- Feedback loop verified: an unreproducible bug got a regression test instead of an invented fix, and the requested change was built, tested and committed.
+- Phase 6 prep: plugin icon, README with GitHub steps, and a clean-clone install verified in an isolated config. Installed locally at user scope.
+
 ## 0.3.0 (2026-11-24)
 - Phase 2:
   - Agents: `architect` (Opus), `implementer` and `reviewer` (Sonnet), `researcher` (Sonnet), `scout` and `librarian` (Haiku, low). An `Explore` override (Haiku) is copied into projects.

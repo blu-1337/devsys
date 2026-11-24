@@ -2,7 +2,7 @@
 
 Every assumption devsys makes about Claude and Claude Code. `/devsys:update` re-verifies these. Change model routing **here** first, then in agent frontmatter.
 
-Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
+Last full verification: **2026-11-24** (Claude Code 2.1.331, Opus 5.5). Last update dry run: 2026-11-24 (`update/proposals/2026-11-24-dry-run.md`, 6 proposals pending the user's yes/no).
 
 ## Environment
 | Item | Value | Verified |
@@ -45,6 +45,7 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 | Skill auto-trigger | Model-invocable skills do **not** reliably fire on plain requests ("build me X" skipped `devsys:build` in evals). A one-line SessionStart instruction fixed it (tests-first 0 -> 1.0) | 2026-11-24 | evals |
 | `claude plugin eval` on Windows | Runner refuses Bash/PowerShell grants (no sandbox backend): behaviour-only cases there; build-to-green via `evals/run.ps1` (`claude -p`). `scaffold_script` = path inside the case dir (bash). Plugin hooks do run. Grader types used: regex, llm, file_exists, tool_used | 2026-11-24 | observed |
 | Plugin always-on cost | ~692 tokens/session for 8 skills + 6 agents (`claude plugin details devsys`) | 2026-11-24 | observed |
+| Self-edit protection | Files of a plugin loaded in the session (e.g. via `--plugin-dir`) are "sensitive": edits need user approval even in acceptEdits. `/devsys:update` writing proposals therefore asks once | 2026-11-24 | observed |
 | Plugin agents | `agents/*.md` in the plugin are namespaced `devsys:<name>`; an `Explore` override must be a project agent (`.claude/agents/Explore.md`, copied by init) | 2026-11-24 | observed |
 | Permission deny vs hook | project `permissions.deny` fires before the PreToolUse hook (both layers useful) | 2026-11-24 | observed |
 | `ask` in headless mode | a PreToolUse `ask` acts as a block in `-p` (no one to ask) | 2026-11-24 | observed |

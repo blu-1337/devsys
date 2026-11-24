@@ -9,11 +9,11 @@ effort: medium
 # devsys update
 
 Args: $ARGUMENTS ("dry-run" = write the proposal only; never apply).
-Work in the devsys **source repo**: `sourceRepo` from `%USERPROFILE%\.claude\devsys\config.json` (if missing, ask once for the folder and save it). Never edit the installed plugin copy.
+Work in the devsys **source repo**: `sourceRepo` from `%USERPROFILE%\.claude\devsys\config.json` (if missing, ask once for the folder and save it). Never edit the installed plugin copy. Claude Code treats a loaded plugin's own files as sensitive, so writing the proposal asks the user once; that is expected (if refused, write it to the scratchpad and give the path).
 
 ## 1. Baseline (cheap, local)
 - `update/capabilities.md` (assumptions + "Last full verification" date = D), `update/sources.md`, `CHANGELOG.md` top entry.
-- Local facts: `claude --version` (CLI at `%USERPROFILE%\.local\bin\claude.exe` if not on PATH), `claude plugin --help`, `claude plugin details devsys` (token cost), current model names from your own system context.
+- Local facts: `claude --version` (CLI at `%USERPROFILE%\.local\bin\claude.exe` if not on PATH), `claude plugin --help`, `claude plugin details devsys` (token cost; if devsys isn't installed: `claude --plugin-dir <sourceRepo> plugin details devsys`, the flag goes before `plugin`), current model names from your own system context.
 - `docs/usage-log.csv` files in recent projects if the user names them (real costs per lane).
 
 ## 2. Research (parallel, read-only, max 3; one at a time if budget is SAVER/unknown)

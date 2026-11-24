@@ -260,7 +260,7 @@ Guardrails: subagents return **evidence briefs** (≤40 lines, file:line plus co
 
 ## 11. Rollout (when you say "go")
 
-**Status 2026-11-24:** phases 0-5 built and live-verified (v0.3.x); phase 6 is ready, but the GitHub repo must be created by the user (no `gh` CLI here). Findings that changed the design are listed in CHANGELOG 0.3.0 and `update/capabilities.md`.
+**Status 2026-11-24:** all phases 0-6 built and live-verified (v0.3.x); repo at github.com/blu-1337/devsys (private), install from GitHub verified. Findings that changed the design are listed in CHANGELOG 0.3.0 and `update/capabilities.md`.
 
 | Phase | Deliverable | Done when |
 |-------|-------------|-----------|

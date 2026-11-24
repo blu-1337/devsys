@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3 (2026-11-24)
+- Phase 6 done: pushed to https://github.com/blu-1337/devsys (private). A fresh install from GitHub in a clean config works (v0.3.2, hooks included).
+- Always-on cost clarified: ~692 tokens in a clean config, ~936 in the user's own config.
+
 ## 0.3.2 (2026-11-24)
 - Applied update proposals 1-5 from `update/proposals/2026-11-24-dry-run.md`. The always-on cost was re-measured at ~936 tokens. Also: the `--plugin-dir` details command, the plugin CLI row, and the 2.1.330 rule that subagents need a pinned model.
 - Fable models are never used by devsys (user decision). The update skill won't propose them.

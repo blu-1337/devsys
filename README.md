@@ -2,7 +2,7 @@
 
 A reusable, token-efficient way to build scripts, applications and plugins for other software with Claude Code. You describe what you want and test the result. Claude does the rest: it clarifies once, shows a short plan, builds with tests first, verifies its own work, gets a fresh-context review, and hands over test instructions.
 
-**Status:** v0.3.2. Phases 0–5 are built and live-verified; Phase 6 (GitHub) needs one step from you. The full design is in [PLAN.md](PLAN.md), the evidence behind it in [RESEARCH.md](RESEARCH.md), and the release history in [CHANGELOG.md](CHANGELOG.md).
+**Status:** v0.3.3. All phases (0–6) are built and live-verified. The repo is at https://github.com/blu-1337/devsys (private). The full design is in [PLAN.md](PLAN.md), the evidence behind it in [RESEARCH.md](RESEARCH.md), and the release history in [CHANGELOG.md](CHANGELOG.md).
 
 **Platform:** Windows 11 with Windows PowerShell 5.1 (PowerShell 7 also works), on the Claude Pro plan.
 
@@ -13,7 +13,7 @@ From a local folder:
 & "$env:USERPROFILE\.local\bin\claude.exe" plugin marketplace add "H:\projects\19-software-development-system"
 & "$env:USERPROFILE\.local\bin\claude.exe" plugin install devsys@devsys-local
 ```
-From GitHub, once it is pushed (see below): `claude plugin marketplace add <github-user>/<repo>`, then `claude plugin install devsys@devsys-local`.
+From GitHub: `claude plugin marketplace add blu-1337/devsys`, then `claude plugin install devsys@devsys-local`.
 
 For the status bar (once per machine): `/devsys:init` offers it. To install it directly:
 ```powershell
@@ -42,17 +42,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "H:\projects\19-software-dev
 
 **Models:** Opus plans through the `architect` agent. Sonnet builds and reviews. Haiku handles searching and bookkeeping. The status bar shows your 5-hour and 7-day usage, and devsys saves usage as it rises.
 
-## Push to GitHub (Phase 6, your step)
-The GitHub CLI isn't installed here, so create the repository yourself:
-1. On github.com, create an **empty private** repository, for example `devsys`, without a README.
-2. Then run:
+## Install on another machine
 ```powershell
-git -C "H:\projects\19-software-development-system" remote add origin https://github.com/<you>/devsys.git
+claude plugin marketplace add blu-1337/devsys
 ```
 ```powershell
-git -C "H:\projects\19-software-development-system" push -u origin main
+claude plugin install devsys@devsys-local
 ```
-3. On any machine: `claude plugin marketplace add <you>/devsys`, then `claude plugin install devsys@devsys-local`.
+The repo is private, so git on that machine must be signed in to GitHub (Git Credential Manager prompts on first use). On this PC, devsys is installed from the local folder, so local changes go live after `claude plugin update devsys@devsys-local`. Push them with `git push`.
 
 ## Layout
 | Folder | Purpose |

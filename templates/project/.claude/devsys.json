@@ -1,0 +1,15 @@
+{
+  "devsysVersion": "0.2.0",
+  "stack": "{{STACK}}",
+  "planPreview": "on",
+  "highRisk": false,
+  "commands": {
+    "check": "{{CHECK_CMD}}",
+    "test": "{{TEST_CMD}}",
+    "format": "{{FORMAT_CMD}}"
+  },
+  "budget": {
+    "saverAt": 50,
+    "conserveAt": 80
+  }
+}

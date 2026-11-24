@@ -179,6 +179,7 @@ The exact Pro limits are unknown, so the system measures instead of guessing.
 - The thresholds are tunable in `devsys.json`.
 - A small `docs/usage-log.csv` records each session's usage per task type (date, lane, model, % used). After a few projects it shows what things really cost on your plan, and `/devsys:update` can then suggest better thresholds.
 - Phase 1 first checks that these statusline fields actually appear on your account.
+- **Found in Phase 1:** the statusline is the *only* source of usage % (it isn't in hook inputs), and the desktop app's Code tab may not run statuslines. When no fresh data exists, the budget is reported as "unknown" and Claude defaults to Sonnet for execution and suggests `/usage` for heavy work. Fallback idea for Phase 2 if needed: estimate usage from session transcripts and calibrate it against limit-hit events.
 
 ## 5. Parallel agents policy (D5)
 

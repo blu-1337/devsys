@@ -9,6 +9,7 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 |------|-------|----------|
 | OS | Windows 11 Pro | 2026-11-24 |
 | Shell for hooks | Windows PowerShell 5.1 (`powershell.exe -NoProfile -ExecutionPolicy Bypass -File`). PowerShell 7 not installed. | 2026-11-24 |
+| PS 5.1 gotchas | `Set-Content -Encoding UTF8` writes a BOM (use `[IO.File]::WriteAllText` with `UTF8Encoding($false)` for JSON); native-command stderr becomes a terminating error under `$ErrorActionPreference='Stop'` (wrap git calls); `Get-Content` defaults to ANSI (pass `-Encoding UTF8`) | 2026-11-24 |
 | Claude CLI path | `%USERPROFILE%\.local\bin\claude.exe` (not on PATH) | 2026-11-24 |
 | Claude Code version | 2.1.310 | 2026-11-24 |
 | Plan | Claude Pro (limits not published; measured via statusline) | 2026-11-24 |
@@ -34,8 +35,12 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 | Hooks: gate | PreToolUse, exit 2 or `permissionDecision: deny` blocks; `onFailure: "block"` | 2026-11-24 | docs/hooks |
 | Hooks: verify | Stop, exit 2 keeps Claude working; cap of 8 consecutive blocks (`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`) | 2026-11-24 | docs/best-practices |
 | Hooks: context | SessionStart stdout and `additionalContext` are injected; output cap 10,000 chars | 2026-11-24 | docs/hooks |
-| Hook on Windows | runs in configured shell; **PowerShell behaviour unverified** | not yet | Phase 1 |
-| Statusline usage | `rate_limits.five_hour.used_percentage`, `rate_limits.seven_day.used_percentage` (Pro/Max only, after first response); `context_window.used_percentage` | docs only | Phase 1 |
+| Hook on Windows | exec form `"command": "powershell.exe", "args": [..., "-File", "${CLAUDE_PLUGIN_ROOT}/hooks/win/x.ps1"]` (no shell quoting); `timeout` in seconds; `hooks/hooks.json` needs top-level `"hooks"` wrapper | unit-tested 2026-11-24; **live firing not yet verified** | docs/hooks, docs/plugins/components |
+| Hook outputs used | PreToolUse `hookSpecificOutput.permissionDecision` deny/ask; Stop exit 2 + stderr; SessionStart/UserPromptSubmit `additionalContext`; `systemMessage` for user | docs 2026-11-24 | docs/hooks |
+| Statusline usage | `rate_limits.five_hour.used_percentage`, `rate_limits.seven_day.used_percentage` (Pro/Max only, after first response); `context_window.used_percentage`. **Only source of usage %**: not in hook input or env. Statusline is user-settings only (not plugin) and **may not render in the desktop Code tab** (user reports) | docs 2026-11-24 | docs/statusline |
+| Plugin env | `${CLAUDE_PLUGIN_ROOT}` (changes per update, never store state), `${CLAUDE_PLUGIN_DATA}` (per-plugin data dir), `CLAUDE_PROJECT_DIR`; substituted in skill text but not in Bash tool env | docs 2026-11-24 | docs/plugins/manifest-reference |
+| Headless CLI | `claude.exe -p` needs its own login (`/login` in terminal); desktop app auth is separate | 2026-11-24 | observed |
+| Plugin idle cost | ~112 tokens/session (2 skill descriptions); hooks cost no model context | 2026-11-24 | `claude plugin details` |
 | Plugins | bundle skills, agents, hooks, MCP, output styles; rules/settings **not** confirmed as plugin parts, so `init` copies them | 2026-11-24 | docs/plugins |
 | Plugin CLI | `validate`, `details` (shows projected token cost), `eval` (built-in eval runner), `tag` | 2026-11-24 | `claude plugin --help` |
 | Effort levels | low, medium, high, xhigh, max; default medium on 5.5 models | 2026-11-24 | docs/model-config |

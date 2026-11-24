@@ -1,5 +1,5 @@
 {
-  "devsysVersion": "0.2.1",
+  "devsysVersion": "0.3.0",
   "stack": "{{STACK}}",
   "planPreview": "on",
   "highRisk": false,

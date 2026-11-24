@@ -17,3 +17,6 @@ Thumbs.db
 Desktop.ini
 .vs/
 .vscode/
+evals/results/
+evals/last.json
+evals/**/__pycache__/

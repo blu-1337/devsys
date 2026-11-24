@@ -1,5 +1,5 @@
 ---
-description: Set up a new or existing project folder for the devsys workflow (CLAUDE.md, docs/, .claude/devsys.json, checks). Use when the user starts a new project or asks to "init devsys" / "set up this project".
+description: Set up a new or existing project folder for the devsys workflow (CLAUDE.md, docs/, devsys.json, checks). Use when the user starts a new project or asks to "init devsys" / "set up this project".
 disable-model-invocation: false
 ---
 
@@ -9,7 +9,8 @@ Goal: a project folder ready for devsys in as few tokens as possible. The script
 
 ## 1. Pre-check
 - Target = current working directory unless the user names another.
-- If `.claude/devsys.json` already exists: say so and stop (offer to update only `devsysVersion` if older than the plugin).
+- Git identity: if `git config user.email` is empty, add to the step-2 questions: "Name and email for git commits (stored in this repo only)?" and set them with `git config user.name/user.email` (repo-local) after scaffolding.
+- If `devsys.json` already exists: say so and stop (offer to update only `devsysVersion` if older than the plugin).
 
 ## 2. Ask once (single message, with defaults)
 Ask only what you can't infer from the folder (existing files reveal the stack):

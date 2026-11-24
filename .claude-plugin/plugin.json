@@ -1,6 +1,6 @@
 {
   "name": "devsys",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Token-efficient Claude Code development system: lanes, model routing, verification gates, knowledge base, self-update. Windows 11.",
   "author": {
     "name": "blu"

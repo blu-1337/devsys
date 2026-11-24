@@ -22,7 +22,7 @@ function Get-DevsysStateDir {
 function Test-DevsysProject([string]$ProjectDir) {
     # Hooks act only in devsys projects (or the devsys repo itself), never elsewhere.
     if ([string]::IsNullOrWhiteSpace($ProjectDir)) { return $false }
-    if (Test-Path (Join-Path $ProjectDir '.claude\devsys.json')) { return $true }
+    if (Get-DevsysConfigPath $ProjectDir) { return $true }
     $pj = Join-Path $ProjectDir '.claude-plugin\plugin.json'
     if (Test-Path $pj) {
         try { return ((Get-Content -Raw $pj | ConvertFrom-Json).name -eq 'devsys') } catch { return $false }
@@ -60,11 +60,20 @@ function Get-BudgetGuidance([string]$Level) {
     }
 }
 
-function Get-DevsysConfig([string]$ProjectDir) {
-    # Returns the project's .claude/devsys.json as an object, or $null if absent/invalid.
+function Get-DevsysConfigPath([string]$ProjectDir) {
+    # devsys.json in the project root (Claude can edit it without a prompt); legacy: .claude\devsys.json.
     if ([string]::IsNullOrWhiteSpace($ProjectDir)) { return $null }
-    $p = Join-Path $ProjectDir '.claude\devsys.json'
-    if (-not (Test-Path $p)) { return $null }
+    foreach ($rel in @('devsys.json', '.claude\devsys.json')) {
+        $p = Join-Path $ProjectDir $rel
+        if (Test-Path $p) { return $p }
+    }
+    return $null
+}
+
+function Get-DevsysConfig([string]$ProjectDir) {
+    # Returns the project's devsys.json as an object, or $null if absent/invalid.
+    $p = Get-DevsysConfigPath $ProjectDir
+    if (-not $p) { return $null }
     try { return (Get-Content -Raw -Encoding UTF8 -Path $p | ConvertFrom-Json) } catch { return $null }
 }
 

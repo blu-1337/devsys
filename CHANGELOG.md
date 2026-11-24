@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.3.0 (2026-11-24)
+- Phase 2:
+  - Agents: `architect` (Opus), `implementer` and `reviewer` (Sonnet), `researcher` (Sonnet), `scout` and `librarian` (Haiku, low). An `Explore` override (Haiku) is copied into projects.
+  - `build` router: guardian check, then the Quick, Standard or Deep lane, with lane files loaded on demand.
+  - Standard lane: clarify once, then Opus spec/plan, plan preview, a sequential build loop, a fresh review, handover and a usage log. Deep lane adds research, core/adapter for host-app plugins, high-risk rules and an Opus review.
+  - New skills: `/devsys:feedback`, `/devsys:review`, `/devsys:compound`.
+- Live-verified in headless sessions on Pro:
+  - Guardian: correct heads-up on "delete the tests to go faster" (~$0.08).
+  - Quick lane: todo CLI plus web UI plus recurring tasks (~$0.20 each).
+  - Standard lane: a Downloads sorter. Opus planned, 7 tasks were committed, 66 tests pass, and the review caught 1 blocker and 3 majors, all fixed (~$1.98 list).
+- Fixes found live:
+  - `opusplan` never reaches Opus outside plan mode, so planning now goes through the `architect` agent.
+  - "unknown" budget no longer blocks Opus planning.
+  - Lane rules tightened: a new user-facing surface means Standard.
+  - The guardian now waits for an explicit answer. Before, it once assumed "my way" and wrote an accepted-risk ADR.
+  - Project settings moved from `.claude/devsys.json` to `devsys.json` in the project root, because Claude Code protects `.claude/` and blocked hands-off edits. The legacy path still works.
+  - `init` asks for a git identity when none is set.
+  - `devsysVersion` is now stamped correctly.
+- Phase 3: `/devsys:stack-new` (new or save; adapters live in the source repo set in `~/.claude/devsys/config.json`). Adapters `python` and `powershell` were verified on this machine, including that the PowerShell execution policy is Restricted, so commands need `-ExecutionPolicy Bypass`.
+- Phase 5 (draft): `/devsys:update` skill (Opus, suggest-only, dry-run mode).
+- 40 hook unit tests.
+
 ## 0.2.1 (2026-11-24)
 - Live-verified in real headless Claude sessions on Windows 11 (Pro subscription):
   - guard denies secrets and asks before destructive commands

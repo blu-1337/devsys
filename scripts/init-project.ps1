@@ -51,8 +51,8 @@ Get-ChildItem -Path $src -Recurse -File -Force | ForEach-Object {
         if ($isJson -and $v -notmatch '^\{\{.*\}\}$') { $v = ConvertTo-JsonText $v }
         $text = $text.Replace($k, $v)
     }
-    if ($rel -eq '.claude\devsys.json') {
-        $text = $text.Replace('"devsysVersion": "0.1.0"', ('"devsysVersion": "' + $version + '"'))
+    if ($rel -eq 'devsys.json') {
+        $text = $text -replace '"devsysVersion": "[^"]*"', ('"devsysVersion": "' + $version + '"')
         if ($HighRisk) { $text = $text.Replace('"highRisk": false', '"highRisk": true') }
     }
     [IO.File]::WriteAllText($dest, $text, $utf8)

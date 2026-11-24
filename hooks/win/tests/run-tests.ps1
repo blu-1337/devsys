@@ -57,7 +57,7 @@ Assert 'session-start silent outside devsys project' ($r.Out.Trim() -eq '' -and 
 { "stack": "test", "planPreview": "on", "highRisk": false,
   "commands": { "check": "exit 0", "test": "", "format": "" },
   "budget": { "saverAt": 50, "conserveAt": 80 } }
-'@ | Set-Content (Join-Path $proj '.claude\devsys.json') -Encoding ASCII
+'@ | Set-Content (Join-Path $proj 'devsys.json') -Encoding ASCII
 "# Plan`n- [x] done task`n- [ ] write the parser - src/parse.ps1" | Set-Content (Join-Path $proj 'docs\plan.md') -Encoding ASCII
 
 $r = Invoke-Hook 'session-start.ps1' @{ hook_event_name = 'SessionStart'; source = 'startup'; session_id = 's1'; cwd = $proj }
@@ -95,7 +95,7 @@ Push-Location $proj; git init -q; git -c user.name=t -c user.email=t@t add -A; g
 $r = Invoke-Hook 'stop-check.ps1' @{ hook_event_name = 'Stop'; session_id = 'c1'; cwd = $proj }
 Assert 'stop passes when check passes' ($r.Code -eq 0) $r
 
-(Get-Content -Raw (Join-Path $proj '.claude\devsys.json')).Replace('"check": "exit 0"', '"check": "Write-Output boom-failure; exit 3"') | Set-Content (Join-Path $proj '.claude\devsys.json') -Encoding ASCII
+(Get-Content -Raw (Join-Path $proj 'devsys.json')).Replace('"check": "exit 0"', '"check": "Write-Output boom-failure; exit 3"') | Set-Content (Join-Path $proj 'devsys.json') -Encoding ASCII
 $r = Invoke-Hook 'stop-check.ps1' @{ hook_event_name = 'Stop'; session_id = 'c1'; cwd = $proj }
 Assert 'stop blocks (exit 2) when check fails' ($r.Code -eq 2 -and $r.Err -match 'boom-failure' -and $r.Err -match 'attempt 1/3') $r
 $null = Invoke-Hook 'stop-check.ps1' @{ hook_event_name = 'Stop'; session_id = 'c1'; cwd = $proj }
@@ -103,13 +103,20 @@ $null = Invoke-Hook 'stop-check.ps1' @{ hook_event_name = 'Stop'; session_id = '
 $r = Invoke-Hook 'stop-check.ps1' @{ hook_event_name = 'Stop'; session_id = 'c1'; cwd = $proj }
 Assert 'stop gives up after 3 blocks' ($r.Code -eq 0 -and $r.Out -match 'still failing') $r
 
-(Get-Content -Raw (Join-Path $proj '.claude\devsys.json')).Replace('"check": "Write-Output boom-failure; exit 3"', '"check": "{{CHECK_CMD}}"') | Set-Content (Join-Path $proj '.claude\devsys.json') -Encoding ASCII
+(Get-Content -Raw (Join-Path $proj 'devsys.json')).Replace('"check": "Write-Output boom-failure; exit 3"', '"check": "{{CHECK_CMD}}"') | Set-Content (Join-Path $proj 'devsys.json') -Encoding ASCII
 $r = Invoke-Hook 'stop-check.ps1' @{ hook_event_name = 'Stop'; session_id = 'c2'; cwd = $proj }
 Assert 'stop skips placeholder check' ($r.Code -eq 0 -and $r.Err.Trim() -eq '') $r
 
 # ---- format ----------------------------------------------------------------
 $r = Invoke-Hook 'format.ps1' @{ hook_event_name = 'PostToolUse'; tool_name = 'Write'; tool_input = @{ file_path = "$proj\a.txt" }; cwd = $proj }
 Assert 'format silent with no formatter' ($r.Code -eq 0 -and $r.Out.Trim() -eq '') $r
+
+# ---- config location -------------------------------------------------------
+. (Join-Path $hookDir 'common.ps1')
+Assert 'config found in project root' ((Get-DevsysConfigPath $proj) -eq (Join-Path $proj 'devsys.json')) $null
+Move-Item (Join-Path $proj 'devsys.json') (Join-Path $proj '.claude\devsys.json')
+Assert 'legacy .claude\devsys.json still found' ((Get-DevsysConfigPath $proj) -like '*\.claude\devsys.json') $null
+Assert 'non-devsys folder ignored' (-not (Test-DevsysProject $state)) $null
 
 Remove-Item -Recurse -Force $tmp
 Write-Output "`n$script:pass passed, $script:fail failed"

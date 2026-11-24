@@ -21,7 +21,7 @@ if ($lvl) {
     $lines += (Get-BudgetGuidance $lvl.Level) + " (5h " + $lvl.FiveHour + "%, 7d " + $lvl.SevenDay + "%)"
     if ($in -and $in.session_id) { Set-Content -Path (Join-Path (Get-DevsysStateDir) ("level-" + $in.session_id + ".txt")) -Value $lvl.Level -Encoding ASCII }
 } else {
-    $lines += "devsys budget: unknown (no fresh statusline data). Prefer Sonnet for execution; suggest /usage if work is heavy."
+    $lines += "devsys budget: unknown (no fresh statusline data). Sonnet for execution, Opus (architect) for planning only, no parallel agents; suggest /usage if work is heavy."
 }
 
 # Update reminder (suggest-only), only on fresh startup

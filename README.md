@@ -2,7 +2,7 @@
 
 A reusable, token-efficient way to build scripts, applications and plugins for other software with Claude Code. You describe what you want and test the result. Claude does the rest: it clarifies once, shows a short plan, builds with tests first, verifies its own work, gets a fresh-context review, and hands over test instructions.
 
-**Status:** v0.3.1. Phases 0–5 are built and live-verified; Phase 6 (GitHub) needs one step from you. The full design is in [PLAN.md](PLAN.md), the evidence behind it in [RESEARCH.md](RESEARCH.md), and the release history in [CHANGELOG.md](CHANGELOG.md).
+**Status:** v0.3.2. Phases 0–5 are built and live-verified; Phase 6 (GitHub) needs one step from you. The full design is in [PLAN.md](PLAN.md), the evidence behind it in [RESEARCH.md](RESEARCH.md), and the release history in [CHANGELOG.md](CHANGELOG.md).
 
 **Platform:** Windows 11 with Windows PowerShell 5.1 (PowerShell 7 also works), on the Claude Pro plan.
 

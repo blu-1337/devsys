@@ -10,7 +10,7 @@ Checked by `/devsys:update`, in this order. Prefer official sources; community s
   https://code.claude.com/docs/en/sub-agents · /skills · /hooks · /memory · /plugins/overview · /model-config · /costs · /statusline
 - Anthropic engineering blog: https://www.anthropic.com/engineering
 - Models overview: https://docs.claude.com/en/docs/about-claude/models/overview
-- Local: `claude --version`, `claude plugin --help`, `claude plugin details devsys`
+- Local: `claude --version`, `claude plugin --help`, `claude plugin details devsys` (not installed: `claude --plugin-dir <repo> plugin details devsys`)
 
 ## Community (practices; verify before adopting)
 - HumanLayer: https://www.humanlayer.com/blog

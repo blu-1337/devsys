@@ -19,7 +19,7 @@ Work in the devsys **source repo**: `sourceRepo` from `%USERPROFILE%\.claude\dev
 ## 2. Research (parallel, read-only, max 3; one at a time if budget is SAVER/unknown)
 Spawn `devsys:researcher`-style briefs but tell each to **reply only, not write files**, <= 30 lines with URLs:
 1. Official changelog + docs since D: new/changed/deprecated features that touch any row of capabilities.md (hooks, skills, agents, plugins, statusline, models, effort, eval).
-2. Models: new Claude models/aliases, pricing or plan-limit changes relevant to Pro routing.
+2. Models: new Claude models/aliases, pricing or plan-limit changes relevant to Pro routing. Fable models are excluded by user decision: never propose routing to them.
 3. Practice: what changed in expert agentic-coding practice since D (community list in sources.md; facts only from official sources).
 
 ## 3. Proposal

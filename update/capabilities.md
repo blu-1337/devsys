@@ -21,6 +21,7 @@ Last full verification: **2026-11-24** (Claude Code 2.1.331, Opus 5.5). Last upd
 | Planning / architecture / escalation | `opus` (Opus 5.5) via the `architect` agent | medium; high on Deep |
 | Implementation / review / research | `sonnet` (Sonnet 5.5) | medium |
 | Scout / summarizer / librarian / parallel read-only | `haiku` (Haiku 5.5) | low |
+| (none) | `fable` (Fable 5.2) **never used by devsys**: user decision 2026-11-24; outside Pro limits (paid credits) and 2x Opus price. No agent, skill or update proposal may route to it | - |
 
 ## Claude Code features relied on
 | Feature | Detail | Verified | Source |
@@ -40,11 +41,11 @@ Last full verification: **2026-11-24** (Claude Code 2.1.331, Opus 5.5). Last upd
 | Statusline usage | `rate_limits.five_hour.used_percentage`, `rate_limits.seven_day.used_percentage` (Pro/Max only, after first response); `context_window.used_percentage`. **Only source of usage %**: not in hook input or env. Statusline is user-settings only (not plugin) and **may not render in the desktop Code tab** (user reports) | docs 2026-11-24 | docs/statusline |
 | Plugin env | `${CLAUDE_PLUGIN_ROOT}` (changes per update, never store state), `${CLAUDE_PLUGIN_DATA}` (per-plugin data dir), `CLAUDE_PROJECT_DIR`; substituted in skill text but not in Bash tool env | docs 2026-11-24 | docs/plugins/manifest-reference |
 | Headless CLI | `claude.exe -p` needs its own login (`/login` in terminal, choose the **subscription** option, not Console/API billing); desktop app auth is separate. `claude auth status` shows `subscriptionType` | 2026-11-24 | observed |
-| Skill `model:` override | `/devsys:quick` with `model: sonnet` ran entirely on Sonnet from an Opus-default session | 2026-11-24 | observed (modelUsage) |
+| Skill `model:` override | `/devsys:quick` with `model: sonnet` ran entirely on Sonnet from an Opus-default session. Since 2.1.330 subagents spawned by such a skill stay on the **session** model unless pinned, so every devsys agent pins `model` | 2026-11-24 | observed (modelUsage) + changelog 2.1.330 |
 | Protected `.claude/` dir | Claude Code asks before edits under `.claude/` even in acceptEdits (seen: `.claude/devsys.json` edit blocked in a hands-off build). devsys config therefore lives in `devsys.json` at the project root | 2026-11-24 | observed |
 | Skill auto-trigger | Model-invocable skills do **not** reliably fire on plain requests ("build me X" skipped `devsys:build` in evals). A one-line SessionStart instruction fixed it (tests-first 0 -> 1.0) | 2026-11-24 | evals |
 | `claude plugin eval` on Windows | Runner refuses Bash/PowerShell grants (no sandbox backend): behaviour-only cases there; build-to-green via `evals/run.ps1` (`claude -p`). `scaffold_script` = path inside the case dir (bash). Plugin hooks do run. Grader types used: regex, llm, file_exists, tool_used | 2026-11-24 | observed |
-| Plugin always-on cost | ~692 tokens/session for 8 skills + 6 agents (`claude plugin details devsys`) | 2026-11-24 | observed |
+| Plugin always-on cost | ~936 tokens/session in v0.3.1 for 8 skills + 6 agents (was ~692 in v0.3.0); measure with `claude plugin details devsys`, or `claude --plugin-dir <repo> plugin details devsys` when not installed | 2026-11-24 | observed |
 | Self-edit protection | Files of a plugin loaded in the session (e.g. via `--plugin-dir`) are "sensitive": edits need user approval even in acceptEdits. `/devsys:update` writing proposals therefore asks once | 2026-11-24 | observed |
 | Plugin agents | `agents/*.md` in the plugin are namespaced `devsys:<name>`; an `Explore` override must be a project agent (`.claude/agents/Explore.md`, copied by init) | 2026-11-24 | observed |
 | Permission deny vs hook | project `permissions.deny` fires before the PreToolUse hook (both layers useful) | 2026-11-24 | observed |
@@ -60,7 +61,7 @@ Last full verification: **2026-11-24** (Claude Code 2.1.331, Opus 5.5). Last upd
 | Eval suite, 6 cases x 2 runs x 2 arms | Sonnet | - | - | ~6 min | ~$1.35 |
 | Statusline live | **verified 2026-11-24 in terminal CLI (Pro):** rendered `Haiku 5.5 \| ctx 4% \| 5h 17% \| 7d 18% \| NORMAL`; usage.json written with `resets_at`. Desktop Code tab display still unverified, so budget data is fresh only while/after a terminal session runs (30-min staleness limit) | 2026-11-24 | observed |
 | Plugins | bundle skills, agents, hooks, MCP, output styles; rules/settings **not** confirmed as plugin parts, so `init` copies them | 2026-11-24 | docs/plugins |
-| Plugin CLI | `validate`, `details` (shows projected token cost), `eval` (built-in eval runner), `tag` | 2026-11-24 | `claude plugin --help` |
+| Plugin CLI | `validate [--strict]`, `details` (projected token cost), `eval`, `tag`, `configure`, `enable`/`disable`, `init`/`new`, `install`, `update`, `prune`, `restore-set-aside`, `test`. `--plugin-dir` is a global flag (goes before `plugin`) | 2026-11-24 (2.1.331) | `claude plugin --help` |
 | Effort levels | low, medium, high, xhigh, max; default medium on 5.5 models | 2026-11-24 | docs/model-config |
 | Headless | `claude -p`, `--output-format stream-json`, `--max-turns`, `--max-budget-usd`, `--bare` | 2026-11-24 | docs/headless |
 | Agent teams | experimental, token-heavy, **not used** | 2026-11-24 | docs/agent-teams |

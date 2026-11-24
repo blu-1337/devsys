@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2 (2026-11-24)
+- Applied update proposals 1-5 from `update/proposals/2026-11-24-dry-run.md`. The always-on cost was re-measured at ~936 tokens. Also: the `--plugin-dir` details command, the plugin CLI row, and the 2.1.330 rule that subagents need a pinned model.
+- Fable models are never used by devsys (user decision). The update skill won't propose them.
+- Skipped: the Fable warning hook and the `engines` field.
+
 ## 0.3.1 (2026-11-24)
 - Phase 4: behaviour eval suite. Its 6 cases run through `claude plugin eval` with a no-plugin baseline arm. There is also a headless build-to-green runner (`evals/run.ps1`, hidden acceptance tests). Baseline: **0.92 with devsys vs 0.42 without**. See `evals/README.md`.
 - Eval-driven fixes:

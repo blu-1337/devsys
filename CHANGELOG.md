@@ -9,6 +9,7 @@
 - Guard: asks before `git checkout --`, `git checkout .`, `git restore` (not `--staged`), `git stash drop|clear`. Seen live: Claude discarded uncommitted changes to fix a failing check.
 - Guard: messages name the file type instead of the raw pattern, to save tokens.
 - 37 hook unit tests.
+- Statusline installed in user settings (backup kept) and live-verified in the terminal: Pro `rate_limits` arrive (5h/7d %), and usage.json feeds the budget levels.
 
 ## 0.2.0 (2026-11-24)
 - Phase 1: Windows PowerShell 5.1 hooks (`hooks/hooks.json`, exec form):

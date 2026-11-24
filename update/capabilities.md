@@ -11,7 +11,7 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 | Shell for hooks | Windows PowerShell 5.1 (`powershell.exe -NoProfile -ExecutionPolicy Bypass -File`). PowerShell 7 not installed. | 2026-11-24 |
 | PS 5.1 gotchas | `Set-Content -Encoding UTF8` writes a BOM (use `[IO.File]::WriteAllText` with `UTF8Encoding($false)` for JSON); native-command stderr becomes a terminating error under `$ErrorActionPreference='Stop'` (wrap git calls); `Get-Content` defaults to ANSI (pass `-Encoding UTF8`) | 2026-11-24 |
 | Claude CLI path | `%USERPROFILE%\.local\bin\claude.exe` (not on PATH) | 2026-11-24 |
-| Claude Code version | 2.1.310 | 2026-11-24 |
+| Claude Code version | 2.1.331 (auto-updates, channel "latest") | 2026-11-24 |
 | Plan | Claude Pro (limits not published; measured via statusline) | 2026-11-24 |
 
 ## Model routing (single source of truth)
@@ -49,6 +49,7 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 |------|-------|-------|-----------|------|--------|
 | Quick lane: PowerShell word counter + 3 Pester tests | Sonnet 5.5 | 6 | ~1.5k (208k cache reads) | 26 s | ~$0.11 |
 | Stop-gate repair of sabotaged script | Haiku 5.5 | 8 | small | ~20 s | small |
+| Statusline live | **verified 2026-11-24 in terminal CLI (Pro):** rendered `Haiku 5.5 \| ctx 4% \| 5h 17% \| 7d 18% \| NORMAL`; usage.json written with `resets_at`. Desktop Code tab display still unverified, so budget data is fresh only while/after a terminal session runs (30-min staleness limit) | 2026-11-24 | observed |
 | Plugin idle cost | ~112 tokens/session (2 skill descriptions); hooks cost no model context | 2026-11-24 | `claude plugin details` |
 | Plugins | bundle skills, agents, hooks, MCP, output styles; rules/settings **not** confirmed as plugin parts, so `init` copies them | 2026-11-24 | docs/plugins |
 | Plugin CLI | `validate`, `details` (shows projected token cost), `eval` (built-in eval runner), `tag` | 2026-11-24 | `claude plugin --help` |

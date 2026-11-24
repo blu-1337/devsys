@@ -17,8 +17,8 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 ## Model routing (single source of truth)
 | Role | Alias | Effort |
 |------|-------|--------|
-| Main session | `opusplan` | medium |
-| Planning / architecture / escalation | `opus` (Opus 5.5) | medium; high on Deep |
+| Main session | `opusplan` (= Sonnet outside plan mode; headless/build runs never reach Opus) | medium |
+| Planning / architecture / escalation | `opus` (Opus 5.5) via the `architect` agent | medium; high on Deep |
 | Implementation / review / research | `sonnet` (Sonnet 5.5) | medium |
 | Scout / summarizer / librarian / parallel read-only | `haiku` (Haiku 5.5) | low |
 
@@ -41,6 +41,11 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 | Plugin env | `${CLAUDE_PLUGIN_ROOT}` (changes per update, never store state), `${CLAUDE_PLUGIN_DATA}` (per-plugin data dir), `CLAUDE_PROJECT_DIR`; substituted in skill text but not in Bash tool env | docs 2026-11-24 | docs/plugins/manifest-reference |
 | Headless CLI | `claude.exe -p` needs its own login (`/login` in terminal, choose the **subscription** option, not Console/API billing); desktop app auth is separate. `claude auth status` shows `subscriptionType` | 2026-11-24 | observed |
 | Skill `model:` override | `/devsys:quick` with `model: sonnet` ran entirely on Sonnet from an Opus-default session | 2026-11-24 | observed (modelUsage) |
+| Protected `.claude/` dir | Claude Code asks before edits under `.claude/` even in acceptEdits (seen: `.claude/devsys.json` edit blocked in a hands-off build). devsys config therefore lives in `devsys.json` at the project root | 2026-11-24 | observed |
+| Skill auto-trigger | Model-invocable skills do **not** reliably fire on plain requests ("build me X" skipped `devsys:build` in evals). A one-line SessionStart instruction fixed it (tests-first 0 -> 1.0) | 2026-11-24 | evals |
+| `claude plugin eval` on Windows | Runner refuses Bash/PowerShell grants (no sandbox backend): behaviour-only cases there; build-to-green via `evals/run.ps1` (`claude -p`). `scaffold_script` = path inside the case dir (bash). Plugin hooks do run. Grader types used: regex, llm, file_exists, tool_used | 2026-11-24 | observed |
+| Plugin always-on cost | ~692 tokens/session for 8 skills + 6 agents (`claude plugin details devsys`) | 2026-11-24 | observed |
+| Plugin agents | `agents/*.md` in the plugin are namespaced `devsys:<name>`; an `Explore` override must be a project agent (`.claude/agents/Explore.md`, copied by init) | 2026-11-24 | observed |
 | Permission deny vs hook | project `permissions.deny` fires before the PreToolUse hook (both layers useful) | 2026-11-24 | observed |
 | `ask` in headless mode | a PreToolUse `ask` acts as a block in `-p` (no one to ask) | 2026-11-24 | observed |
 
@@ -49,8 +54,10 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 |------|-------|-------|-----------|------|--------|
 | Quick lane: PowerShell word counter + 3 Pester tests | Sonnet 5.5 | 6 | ~1.5k (208k cache reads) | 26 s | ~$0.11 |
 | Stop-gate repair of sabotaged script | Haiku 5.5 | 8 | small | ~20 s | small |
+| Guardian heads-up (no action) | Sonnet 5.5 | 2 | ~0.5k | 13 s | ~$0.08 |
+| Standard lane: Downloads sorter, 7 tasks + review fixes, 66 tests | Opus plan + Sonnet build | 23 | ~60k | ~8 min | ~$2.40 |
+| Eval suite, 6 cases x 2 runs x 2 arms | Sonnet | - | - | ~6 min | ~$1.35 |
 | Statusline live | **verified 2026-11-24 in terminal CLI (Pro):** rendered `Haiku 5.5 \| ctx 4% \| 5h 17% \| 7d 18% \| NORMAL`; usage.json written with `resets_at`. Desktop Code tab display still unverified, so budget data is fresh only while/after a terminal session runs (30-min staleness limit) | 2026-11-24 | observed |
-| Plugin idle cost | ~112 tokens/session (2 skill descriptions); hooks cost no model context | 2026-11-24 | `claude plugin details` |
 | Plugins | bundle skills, agents, hooks, MCP, output styles; rules/settings **not** confirmed as plugin parts, so `init` copies them | 2026-11-24 | docs/plugins |
 | Plugin CLI | `validate`, `details` (shows projected token cost), `eval` (built-in eval runner), `tag` | 2026-11-24 | `claude plugin --help` |
 | Effort levels | low, medium, high, xhigh, max; default medium on 5.5 models | 2026-11-24 | docs/model-config |

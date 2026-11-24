@@ -144,7 +144,7 @@ Risks:   <only if any>
 
 - Typically 10–20 lines, with no fluff.
 - The Quick lane skips the preview unless you ask for it.
-- The setting lives in `.claude/devsys.json`, with `"planPreview": "on" | "off" | "deep-only"` (default `on`). You can also flip it in conversation ("no preview this time").
+- The setting lives in `devsys.json` (project root), with `"planPreview": "on" | "off" | "deep-only"` (default `on`). You can also flip it in conversation ("no preview this time").
 
 ## 4. Model and effort routing for the Pro plan (D2)
 
@@ -167,7 +167,7 @@ On Pro, Opus spends your limits fastest. The approach is **Opus thinks, Sonnet t
 
 The exact Pro limits are unknown, so the system measures instead of guessing.
 
-- The statusline script receives `rate_limits.five_hour.used_percentage` and `seven_day.used_percentage`. It writes them to `.claude/devsys-usage.json` each time it refreshes.
+- The statusline script receives `rate_limits.five_hour.used_percentage` and `seven_day.used_percentage`. It writes them to `~/.claude/devsys/usage.json` each time it refreshes.
 - A `UserPromptSubmit` hook reads that file and injects **one line** of budget state when the level changes. Claude adapts as follows:
 
 | Budget level | Trigger (higher of 5h / 7d) | Behavior |
@@ -254,11 +254,13 @@ Guardrails: subagents return **evidence briefs** (≤40 lines, file:line plus co
 - `session-start` (shows the current plan task, plus the update reminder)
 - `budget` (UserPromptSubmit: injects the usage level from §4b when it changes)
 
-**Project settings:** `.claude/devsys.json` holds `planPreview`, the budget thresholds, `highRisk` and the stack.
+**Project settings:** `devsys.json` (project root) holds `planPreview`, the budget thresholds, `highRisk` and the stack.
 
 **Settings template:** permissions allowlist for stack commands, deny list, statusline with context and usage %.
 
 ## 11. Rollout (when you say "go")
+
+**Status 2026-11-24:** phases 0-5 built and live-verified (v0.3.x); phase 6 is ready, but the GitHub repo must be created by the user (no `gh` CLI here). Findings that changed the design are listed in CHANGELOG 0.3.0 and `update/capabilities.md`.
 
 | Phase | Deliverable | Done when |
 |-------|-------------|-----------|

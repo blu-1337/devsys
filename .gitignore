@@ -1,0 +1,19 @@
+# Local / per-machine state
+.claude/settings.local.json
+.claude/devsys-usage.json
+update/last-check.txt
+evals/runs/
+*.log
+
+# Secrets (never commit)
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+.vs/
+.vscode/

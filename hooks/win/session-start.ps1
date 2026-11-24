@@ -8,6 +8,9 @@ $cfg = Get-DevsysConfig $proj
 $lines = @()
 $userMsg = @()
 
+# Routing: skills don't reliably auto-trigger (eval finding), so state it once per session.
+if ($cfg) { $lines += 'devsys project: for any request to build, add, change or fix code, first invoke the Skill tool with skill "devsys:build" (it picks the lane; small changes go to the Quick lane, tests first). Questions and explanations need no skill.' }
+
 # Current task = first unchecked box in docs/plan.md
 $plan = Join-Path $proj 'docs\plan.md'
 if (Test-Path $plan) {

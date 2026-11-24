@@ -63,6 +63,7 @@ Assert 'session-start silent outside devsys project' ($r.Out.Trim() -eq '' -and 
 $r = Invoke-Hook 'session-start.ps1' @{ hook_event_name = 'SessionStart'; source = 'startup'; session_id = 's1'; cwd = $proj }
 Assert 'session-start shows current task' ($r.Out -match 'write the parser') $r
 Assert 'session-start budget unknown without data' ($r.Out -match 'budget: unknown') $r
+Assert 'session-start routes builds via devsys:build' ($r.Out -match 'devsys:build') $r
 Assert 'session-start creates last-check' (Test-Path (Join-Path $state 'last-check.txt')) $r
 
 (Get-Date).AddDays(-40).ToString('yyyy-MM-dd') | Set-Content (Join-Path $state 'last-check.txt') -Encoding ASCII

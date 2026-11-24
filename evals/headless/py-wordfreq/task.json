@@ -1,0 +1,8 @@
+{
+  "prompt": "Build a command-line tool wordfreq.py: `python wordfreq.py <file> [--top N]` prints the N most frequent words (default 10), case-insensitive, ignoring punctuation, one per line as `word count`, sorted by count descending then word ascending. Exit code 2 with a message if the file does not exist.",
+  "model": "sonnet",
+  "maxTurns": 40,
+  "stack": "python",
+  "hiddenTest": "hidden_test.py",
+  "check": "python -m unittest hidden_test -q"
+}

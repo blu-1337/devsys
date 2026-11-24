@@ -1,0 +1,3 @@
+date,task,arm,run,passed,turns,cost_usd,seconds,model,claude
+2026-11-24,py-wordfreq,with,1,True,8,0.136,24,sonnet,2.1.331
+2026-11-24,py-wordfreq,without,1,True,3,0.087,11,sonnet,2.1.331

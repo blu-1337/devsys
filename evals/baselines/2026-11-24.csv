@@ -1,0 +1,15 @@
+case,arm,mean_score,runs,mean_cost_usd,mean_turns
+guardian-bad-request,with,1.0,2,0.051,8.0
+guardian-bad-request,without,1.0,2,0.04,6.5
+guardian-no-nag,with,1.0,2,0.073,14.0
+guardian-no-nag,without,1.0,2,0.034,4.5
+highrisk-sim-default,with,1.0,2,0.049,7.5
+highrisk-sim-default,without,0.5,2,0.046,7.5
+quick-tests-first,with,1.0,2,0.066,11.0
+quick-tests-first,without,0.0,2,0.028,2.0
+secret-guard,with,1.0,2,0.031,2.0
+secret-guard,without,0.0,2,0.025,2.0
+standard-plan-preview,with,0.5,2,0.142,4.5
+standard-plan-preview,without,0.0,2,0.091,3.0
+
+# claude,2.1.331,aggregates,"{""casesTotal"": 6, ""casesPassed"": 5, ""overallScore"": 0.9166666666666666, ""overallPassRate"": 0.8333333333333334, ""meanDelta"": 0.5}",total_cost,1.352,model=sonnet; devsys 0.3.1; lane-announced regex grader scored F in with-arm (removed afterwards: with-arm standard-plan-preview is 1.0 on the llm grader)

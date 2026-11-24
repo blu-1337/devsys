@@ -21,15 +21,15 @@ function Out-Decision([string]$Decision, [string]$Reason) {
 # --- Secrets (deny) ---------------------------------------------------------
 # Allowed examples: .env.example, .env.sample, .env.template
 $secretPatterns = @(
-    '(^|[\\/\s"''=])\.env(?!\.(example|sample|template))(\.[\w-]+)?($|[\s"''|;&>)])',
-    '\.(pem|pfx|p12|key)($|[\s"''|;&>)])',
-    '(^|[\\/\s"''])id_(rsa|ed25519|ecdsa)($|[\s"''.])',
-    '[\\/]secrets[\\/]',
-    '(^|[\\/\s"''])credentials\.json($|[\s"''])'
+    @{ p = '(^|[\\/\s"''=])\.env(?!\.(example|sample|template))(\.[\w-]+)?($|[\s"''|;&>)])'; d = '.env file' },
+    @{ p = '\.(pem|pfx|p12|key)($|[\s"''|;&>)])'; d = 'key/certificate file' },
+    @{ p = '(^|[\\/\s"''])id_(rsa|ed25519|ecdsa)($|[\s"''.])'; d = 'SSH key' },
+    @{ p = '[\\/]secrets[\\/]'; d = 'secrets folder' },
+    @{ p = '(^|[\\/\s"''])credentials\.json($|[\s"''])'; d = 'credentials file' }
 )
-foreach ($p in $secretPatterns) {
-    if ($target -match $p) {
-        Out-Decision 'deny' "devsys guard: '$tool' touches a secret file (matched $p). Secrets are never read or written by Claude. Ask the user to handle this file themselves, or use a placeholder/example file."
+foreach ($x in $secretPatterns) {
+    if ($target -match $x.p) {
+        Out-Decision 'deny' ("devsys guard: blocked access to a " + $x.d + ". Claude never reads or writes secrets; ask the user to handle it, or use an example/placeholder file.")
     }
 }
 
@@ -44,7 +44,11 @@ if ($tool -eq 'Bash' -or $tool -eq 'PowerShell') {
         @{ p = 'git\s+push\b.*(--force\b|--force-with-lease\b|\s-f\b)'; d = 'force push' },
         @{ p = 'git\s+reset\s+--hard'; d = 'hard reset (discards uncommitted work)' },
         @{ p = 'git\s+clean\s+-[a-zA-Z]*f'; d = 'git clean (deletes untracked files)' },
-        @{ p = 'git\s+branch\s+-D\b'; d = 'force branch delete' }
+        @{ p = 'git\s+branch\s+-D\b'; d = 'force branch delete' },
+        @{ p = 'git\s+checkout\s+(\S+\s+)?--\s'; d = 'git checkout -- (discards uncommitted changes)' },
+        @{ p = 'git\s+checkout\s+\.(\s|$)'; d = 'git checkout . (discards uncommitted changes)' },
+        @{ p = 'git\s+restore\s+(?!.*--staged)(?!.*\s-S\b)'; d = 'git restore (discards uncommitted changes)' },
+        @{ p = 'git\s+stash\s+(drop|clear)\b'; d = 'stash delete' }
     )
     foreach ($x in $destructive) {
         if ($target -match $x.p) {

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.1 (2026-11-24)
+- Live-verified in real headless Claude sessions on Windows 11 (Pro subscription):
+  - guard denies secrets and asks before destructive commands
+  - session-start context is injected
+  - `/devsys:quick` builds end-to-end on Sonnet with tests first
+  - the Stop gate forces a fix when tests fail
+- Guard: asks before `git checkout --`, `git checkout .`, `git restore` (not `--staged`), `git stash drop|clear`. Seen live: Claude discarded uncommitted changes to fix a failing check.
+- Guard: messages name the file type instead of the raw pattern, to save tokens.
+- 37 hook unit tests.
+
 ## 0.2.0 (2026-11-24)
 - Phase 1: Windows PowerShell 5.1 hooks (`hooks/hooks.json`, exec form):
   - `guard` (PreToolUse): denies secret files, asks before destructive commands

@@ -42,6 +42,11 @@ $r = Pre 'PowerShell' @{ command = 'Remove-Item -Recurse -Force .\dist' }; Asser
 $r = Pre 'Bash' @{ command = 'git push --force origin main' };        Assert 'guard asks force push' ($r.Out -match '"ask"') $r
 $r = Pre 'Bash' @{ command = 'git reset --hard HEAD~1' };             Assert 'guard asks reset --hard' ($r.Out -match '"ask"') $r
 $r = Pre 'Bash' @{ command = 'git status' };                          Assert 'guard allows git status' ($r.Out.Trim() -eq '') $r
+$r = Pre 'Bash' @{ command = 'git checkout -- wordcount.ps1' };       Assert 'guard asks checkout --' ($r.Out -match '"ask"') $r
+$r = Pre 'Bash' @{ command = 'git restore src/a.ps1' };               Assert 'guard asks git restore' ($r.Out -match '"ask"') $r
+$r = Pre 'Bash' @{ command = 'git restore --staged src/a.ps1' };      Assert 'guard allows restore --staged' ($r.Out.Trim() -eq '') $r
+$r = Pre 'Bash' @{ command = 'git checkout -b feature/x' };           Assert 'guard allows checkout -b' ($r.Out.Trim() -eq '') $r
+$r = Pre 'Read' @{ file_path = "$proj\.env" };                        Assert 'guard message has no raw regex' ($r.Out -match '\.env file' -and $r.Out -notmatch '\(\?!') $r
 
 # ---- session-start / budget (non-devsys project = silent) ------------------
 $r = Invoke-Hook 'session-start.ps1' @{ hook_event_name = 'SessionStart'; source = 'startup'; session_id = 's1'; cwd = $proj }

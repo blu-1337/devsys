@@ -35,11 +35,20 @@ Last full verification: **2026-11-24** (Claude Code 2.1.310, Opus 5.5).
 | Hooks: gate | PreToolUse, exit 2 or `permissionDecision: deny` blocks; `onFailure: "block"` | 2026-11-24 | docs/hooks |
 | Hooks: verify | Stop, exit 2 keeps Claude working; cap of 8 consecutive blocks (`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`) | 2026-11-24 | docs/best-practices |
 | Hooks: context | SessionStart stdout and `additionalContext` are injected; output cap 10,000 chars | 2026-11-24 | docs/hooks |
-| Hook on Windows | exec form `"command": "powershell.exe", "args": [..., "-File", "${CLAUDE_PLUGIN_ROOT}/hooks/win/x.ps1"]` (no shell quoting); `timeout` in seconds; `hooks/hooks.json` needs top-level `"hooks"` wrapper | unit-tested 2026-11-24; **live firing not yet verified** | docs/hooks, docs/plugins/components |
+| Hook on Windows | exec form `"command": "powershell.exe", "args": [..., "-File", "${CLAUDE_PLUGIN_ROOT}/hooks/win/x.ps1"]` (no shell quoting); `timeout` in seconds; `hooks/hooks.json` needs top-level `"hooks"` wrapper | **live-verified 2026-11-24**: PreToolUse deny + ask, SessionStart context, Stop exit-2 gate (Claude fixed sabotaged code) | docs/hooks, docs/plugins/components |
 | Hook outputs used | PreToolUse `hookSpecificOutput.permissionDecision` deny/ask; Stop exit 2 + stderr; SessionStart/UserPromptSubmit `additionalContext`; `systemMessage` for user | docs 2026-11-24 | docs/hooks |
 | Statusline usage | `rate_limits.five_hour.used_percentage`, `rate_limits.seven_day.used_percentage` (Pro/Max only, after first response); `context_window.used_percentage`. **Only source of usage %**: not in hook input or env. Statusline is user-settings only (not plugin) and **may not render in the desktop Code tab** (user reports) | docs 2026-11-24 | docs/statusline |
 | Plugin env | `${CLAUDE_PLUGIN_ROOT}` (changes per update, never store state), `${CLAUDE_PLUGIN_DATA}` (per-plugin data dir), `CLAUDE_PROJECT_DIR`; substituted in skill text but not in Bash tool env | docs 2026-11-24 | docs/plugins/manifest-reference |
-| Headless CLI | `claude.exe -p` needs its own login (`/login` in terminal); desktop app auth is separate | 2026-11-24 | observed |
+| Headless CLI | `claude.exe -p` needs its own login (`/login` in terminal, choose the **subscription** option, not Console/API billing); desktop app auth is separate. `claude auth status` shows `subscriptionType` | 2026-11-24 | observed |
+| Skill `model:` override | `/devsys:quick` with `model: sonnet` ran entirely on Sonnet from an Opus-default session | 2026-11-24 | observed (modelUsage) |
+| Permission deny vs hook | project `permissions.deny` fires before the PreToolUse hook (both layers useful) | 2026-11-24 | observed |
+| `ask` in headless mode | a PreToolUse `ask` acts as a block in `-p` (no one to ask) | 2026-11-24 | observed |
+
+## Observed costs (Pro plan, list-price equivalents from `-p` JSON)
+| Task | Model | Turns | Output tok | Time | List $ |
+|------|-------|-------|-----------|------|--------|
+| Quick lane: PowerShell word counter + 3 Pester tests | Sonnet 5.5 | 6 | ~1.5k (208k cache reads) | 26 s | ~$0.11 |
+| Stop-gate repair of sabotaged script | Haiku 5.5 | 8 | small | ~20 s | small |
 | Plugin idle cost | ~112 tokens/session (2 skill descriptions); hooks cost no model context | 2026-11-24 | `claude plugin details` |
 | Plugins | bundle skills, agents, hooks, MCP, output styles; rules/settings **not** confirmed as plugin parts, so `init` copies them | 2026-11-24 | docs/plugins |
 | Plugin CLI | `validate`, `details` (shows projected token cost), `eval` (built-in eval runner), `tag` | 2026-11-24 | `claude plugin --help` |
